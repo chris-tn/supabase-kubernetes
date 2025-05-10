@@ -40,6 +40,7 @@ helm.sh/chart: {{ include "supabase.chart" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+argocd.argoproj.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
@@ -59,4 +60,13 @@ Create the name of the service account to use
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
+{{- end }}
+
+{{/*
+ArgoCD specific annotations
+*/}}
+{{- define "supabase.argocd.annotations" -}}
+argocd.argoproj.io/sync-wave: "0"
+argocd.argoproj.io/sync-options: Prune=true
+argocd.argoproj.io/compare-options: IgnoreExtraneous
 {{- end }}
